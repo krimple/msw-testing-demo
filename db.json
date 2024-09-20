@@ -1,0 +1,9 @@
+{
+  "customers": [
+    { "id": "e17c2a6d-2e78-46f8-91f9-5386e4cb0316", "name": "customer A" },
+    { "id": "1bb25dcb-5db6-44c7-a85a-1366df6e3597", "name": "customer B" },
+    { "id": "6b80cc22-2dd1-4c62-ae92-5754274d8bc6" ,"name": "customer C" },
+    { "id": "ce0f78a2-9af0-4705-bbbc-9e94fbb8a2ed", "name": "customer D" }
+  ]
+}
+
