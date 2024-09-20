@@ -1,12 +1,22 @@
 import {mswServer} from "@/setupTest";
 import {http} from "msw/core/http";
-import {HttpResponse} from "msw";
+import {delay, HttpResponse} from "msw";
 import {screen, render, waitFor} from "@testing-library/react";
 import ListCustomers from "@/features/customers/list-customers/ListCustomers";
 import {store} from "@/store/create-store";
 import {Provider} from "react-redux";
 
 describe('ListCustomers Component', () => {
+
+    it('should fail to find customers b/c no networking exists', async () => {
+        render(
+            <Provider store={store}>
+                <ListCustomers />
+            </Provider>
+        );
+        await waitFor(() => expect(screen.queryByText(/customer A/)).toBeInTheDocument());
+    })
+
     it('should show customers when data exists', async () => {
         mswServer.use(
             http.get('/api/customers', () => {
@@ -26,7 +36,30 @@ describe('ListCustomers Component', () => {
         );
 
         await waitFor(() => expect(screen.queryByText(/customer A/)).toBeInTheDocument());
+    });
 
+    it('Should show a spinner while waiting... then show no data in this case', async () => {
+
+        // return empty array after 1 second delay
+        mswServer.use(
+            http.get('/api/customers', async () => {
+                await delay(500);
+                return HttpResponse.json([], { status: 200 });
+            }, {once: true}, )
+        )
+
+        render(
+            <Provider store={store}>
+                <ListCustomers />
+            </Provider>
+        );
+
+        // spinner appears in fetching phase
+        await waitFor(() => expect(screen.queryByTestId('spinner')).toBeInTheDocument());
+        // spinner goes away after fetch completed
+        await waitFor(() => expect(screen.queryByTestId('spinner')).not.toBeInTheDocument());
+        // show no data found message
+        await waitFor(() => expect(screen.queryByText(/No customers found/i)).toBeInTheDocument());
     });
 
 })

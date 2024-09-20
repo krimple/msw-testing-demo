@@ -22,4 +22,4 @@ afterAll(() => {
 })
 
 // so tests don't have to manually import it
-export {mswServer}
+export {mswServer};

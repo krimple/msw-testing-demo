@@ -1,12 +1,12 @@
 import './App.css'
 import {store} from './store/create-store';
 import { Provider } from 'react-redux';
-import ListCustomers from "@/features/customers/list-customers/ListCustomers";
+import CustomerManager from "@/features/customers/CustomerManager.tsx";
 
 function App() {
   return (
     <Provider store={store}>
-        <ListCustomers />
+        <CustomerManager />
     </Provider>
   )
 }
